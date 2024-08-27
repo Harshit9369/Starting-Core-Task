@@ -145,7 +145,6 @@ def fetch_youtube_data():
         response.raise_for_status()
         youtube_data = response.json()
 
-        st.write("Raw YouTube Data:", youtube_data)
         filtered_data = []
 
         for item in youtube_data:
