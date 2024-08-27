@@ -6,6 +6,7 @@ from config import API_CONFIG
 import time
 import psycopg2
 
+@st.experimental_singleton()
 def init_connection():
     return psycopg2.connect(
         dbname=st.secrets["db"]["db_name"],
