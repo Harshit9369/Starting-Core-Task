@@ -192,6 +192,8 @@ def get_influencer_campaign_data():
 
 def main():
     global conn
+    conn = init_connection()  # Initialize the connection at the start of main()
+
     st.sidebar.title("Influencer Campaign Dashboard")
     st.sidebar.markdown("[Home](#)")
     st.sidebar.markdown("[Influencers](#influencers)")
