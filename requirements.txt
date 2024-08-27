@@ -20,5 +20,4 @@ plotly
 tweepy
 schedule
 insta-scrape
-psycopg2
 
