@@ -44,7 +44,7 @@ def replace_none_with_defaults(data):
     }
     return [
         [item if item is not None else default_values.get(column_name, 'Unknown')
-         for column_name, item in zip(['channel_title', 'subscribers_count', 'views_count', 'video_count', 'country'], row)]
+        for column_name, item in zip(['channel_title', 'subscribers_count', 'views_count', 'video_count', 'country'], row)]
         for row in data
     ]
 
