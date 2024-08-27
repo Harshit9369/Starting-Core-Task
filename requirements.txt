@@ -1,6 +1,6 @@
 Flask
 SQLAlchemy
-psycopg2-binary
+psycopg2-binary==2.9.9
 flask_sqlalchemy
 Flask-Migrate
 flask-cors
@@ -20,4 +20,3 @@ plotly
 tweepy
 schedule
 insta-scrape
-psycopg2

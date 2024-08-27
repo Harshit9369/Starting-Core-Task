@@ -197,6 +197,22 @@ def store_youtube_data(conn, data):
 def generate_channel_id(channel_title):
     return hash(channel_title)
 
+def get_influencer_campaign_data(conn):
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT i.channel_title, c.campaign_name
+            FROM connections co
+            JOIN influencers i ON co.influencer_id::text = i.channel_id
+            JOIN campaigns c ON co.campaign_id = c.id
+        """)
+        rows = cur.fetchall()
+        cur.close()
+        return rows
+    except Exception as e:
+        st.error(f"Failed to retrieve influencer-campaign data: {e}")
+        return []
+
 def main():
     st.sidebar.title("Influencer Campaign Dashboard")
     st.sidebar.markdown("[Home](#)")
