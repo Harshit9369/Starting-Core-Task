@@ -8,11 +8,11 @@ import psycopg2
 
 def init_connection():
     return psycopg2.connect(
-        dbname=st.secrets["db_name"],
-        user=st.secrets["user"],
-        password=st.secrets["password"],
-        host=st.secrets["host"],
-        port=st.secrets["port"]
+        dbname=st.secrets["db"]["db_name"],
+        user=st.secrets["db"]["user"],
+        password=st.secrets["db"]["password"],
+        host=st.secrets["db"]["host"],
+        port=st.secrets["db"]["port"]
     )
 
 conn = init_connection()
