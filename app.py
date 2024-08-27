@@ -7,16 +7,22 @@ import time
 import psycopg2
 
 def init_connection():
-    return psycopg2.connect(
+    conn = psycopg2.connect(
         dbname=st.secrets["db_name"],
         user=st.secrets["user"],
         password=st.secrets["password"],
         host=st.secrets["host"],
         port=st.secrets["port"]
     )
+    return conn
 
+def execute_query(query, params=None):
+    with conn.cursor() as cursor:
+        cursor.execute(query, params)
+        if query.strip().lower().startswith('select'):
+            return cursor.fetchall()
+        conn.commit()
 
-conn = init_connection()
 
 def get_influencers():
     try:
@@ -51,15 +57,13 @@ def get_connections():
         return []
 
 def add_connection(influencer_id, campaign_id, contact_date, status):
-    try:
-        query = """
-            INSERT INTO connections (influencer_id, campaign_id, contact_date, status)
-            VALUES (%s, %s, %s, %s)
-        """
-        conn.query(query, params=(influencer_id, campaign_id, contact_date, status))
-        st.success("Connection added successfully.")
-    except Exception as e:
-        st.error(f"Failed to add connection: {e}")
+    query = """
+        INSERT INTO connections (influencer_id, campaign_id, contact_date, status)
+        VALUES (%s, %s, %s, %s)
+    """
+    execute_query(query, (influencer_id, campaign_id, contact_date, status))
+    st.success("Connection added successfully.")
+
 
 def update_connection(id, contact_date, status):
     try:
@@ -187,6 +191,7 @@ def get_influencer_campaign_data():
         return []
 
 def main():
+    global conn
     st.sidebar.title("Influencer Campaign Dashboard")
     st.sidebar.markdown("[Home](#)")
     st.sidebar.markdown("[Influencers](#influencers)")
@@ -194,13 +199,13 @@ def main():
     st.sidebar.markdown("[Campaigns](#campaigns)")
     
     st.title("Influencer Campaign Dashboard")
-    
+
     st.header("Fetch YouTube Data")
     if st.button("Fetch and Store YouTube Data"):
         youtube_data = fetch_youtube_data()
         if youtube_data:
             store_youtube_data(youtube_data)
-    
+
     st.header("Influencers")
     influencers = get_influencers()
     if influencers:
@@ -211,7 +216,7 @@ def main():
         st.dataframe(df)
     else:
         st.write("No influencer data available.")
-    
+
     st.header("Existing Connections")
     connections = get_connections()
     if connections:
@@ -247,7 +252,7 @@ def main():
             delete_connection(id)
         
     st.header("Campaigns")
-    campaigns = get_campaigns(conn)
+    campaigns = get_campaigns()
     if campaigns:
         df_camp = pd.DataFrame(campaigns, columns=['ID', 'Campaign Name', 'Start Date', 'End Date'])
         st.dataframe(df_camp)
@@ -261,10 +266,10 @@ def main():
         end_date = st.date_input("End Date")
         add_campaign_button = st.form_submit_button("Add Campaign")
         if add_campaign_button:
-            add_campaign(conn, name, start_date, end_date)
+            add_campaign(name, start_date, end_date)
 
     st.header("Connections Summary")
-    connections_summary = get_connections_summary(conn)
+    connections_summary = get_connections_summary()
     if connections_summary:
         df_summary = pd.DataFrame(connections_summary, columns=['Campaign Name', 'Number of Connections'])
         fig = px.bar(df_summary, x='Campaign Name', y='Number of Connections')
