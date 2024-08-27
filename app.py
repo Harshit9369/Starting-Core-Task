@@ -8,12 +8,13 @@ import psycopg2
 
 def init_connection():
     return psycopg2.connect(
-        dbname=st.secrets["db_name"],
-        user=st.secrets["user"],
-        password=st.secrets["password"],
-        host=st.secrets["host"],
-        port=st.secrets["port"]
+        dbname=st.secrets["postgres"]["db_name"],
+        user=st.secrets["postgres"]["user"],
+        password=st.secrets["postgres"]["password"],
+        host=st.secrets["postgres"]["host"],
+        port=st.secrets["postgres"]["port"]
     )
+
 
 conn = init_connection()
 
