@@ -199,6 +199,13 @@ def generate_channel_id(channel_title):
     return hash(channel_title)
 
 def main():
+    st.sidebar.title("Influencer Campaign Dashboard")
+    st.sidebar.markdown("[Home](#)")
+    st.sidebar.markdown("[Influencers](#influencers)")
+    st.sidebar.markdown("[Connections](#connections)")
+    st.sidebar.markdown("[Campaigns](#campaigns)")
+    
+    st.title("Influencer Campaign Dashboard")
     
     conn = connect_db()
     if conn:
